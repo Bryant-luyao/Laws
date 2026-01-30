@@ -144,7 +144,7 @@ class LawParser(object):
             yield from arr
 
     def run(self):
-        for i in range(1, 5):
+        for i in range(1, 32):
             ret = self.request.getLawList(i)
             arr = ret["result"]["data"]
             if len(arr) == 0:
@@ -178,30 +178,18 @@ def main():
     if args:
         req.parse_file(args[0], args[1])
         return
-    req.request.searchType = "1,3"
+    req.request.searchType = 2
     # req.request.searchType = 'title;vague'
+    # 
     req.request.params = [
-        # ("type", "公安部规章")
-        # ("xlwj", ["02", "03", "04", "05", "06", "07", "08"]),  # 法律法规
-        # ("xlwj", ["07"]),
-        #  ("fgbt", "消防法"),
-        ("fgxlwj", "xzfg"),  # 行政法规
-        # ('type', 'sfjs'),
-        # ("zdjg", "4028814858a4d78b0158a50f344e0048&4028814858a4d78b0158a50fa2ba004c"), #北京
-        # ("zdjg", "4028814858b9b8e50158bed591680061&4028814858b9b8e50158bed64efb0065"), #河南
-        # ("zdjg", "4028814858b9b8e50158bec45e9a002d&4028814858b9b8e50158bec500350031"), # 上海
-        # ("zdjg", "4028814858b9b8e50158bec5c28a0035&4028814858b9b8e50158bec6abbf0039"), # 江苏
-        # ("zdjg", "4028814858b9b8e50158bec7c42f003d&4028814858b9b8e50158beca3c590041"), # 浙江
-        # ("zdjg", "4028814858b9b8e50158bed40f6d0059&4028814858b9b8e50158bed4987a005d"),  # 山东
-        # ("zdjg", "4028814858b9b8e50158bef1d72600b9&4028814858b9b8e50158bef2706800bd"), # 陕西省
-        # (
-        #     "zdjg",
-        #     "4028814858b9b8e50158beda43a50079&4028814858b9b8e50158bedab7ea007d",
-        # ),  # 广东
-        # (
-        #     "zdjg",
-        #     "4028814858b9b8e50158bee5863c0091&4028814858b9b8e50158bee9a3aa0095",
-        # )  # 重庆
+
+        ("ssx", [4, 3]), # 时效性 3 有效 4 尚未生效
+        # ("flfgCodeId", [100]), # 法律法规分类 100-宪法
+        # ("flfgCodeId", [101, 102, 110, 120, 130, 140, 150, 160, 170, 180, 190, 195, 200]), # 法律
+        # ("flfgCodeId", [201, 210, 215]), # 行政法规 
+        # ("flfgCodeId", [220]), # 监察法规
+        ("flfgCodeId", [311, 320, 330, 340, 350]), # 司法解释
+
     ]
     # req.request.req_time = 1647659481879
     req.request.req_time = int(time() * 1000)

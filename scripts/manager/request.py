@@ -12,6 +12,7 @@ from hashlib import sha1
 from time import sleep
 
 import requests
+import certifi
 from docx import Document
 from manager.cache import CacheManager, CacheType
 
@@ -107,8 +108,28 @@ class RequestManager(object):
 
         # 解析JSON响应并缓存
         ret = response.json()
-        self.cache.set(cache_key, CacheType.WebPage, ret, "json")
-        return ret
+        rows = ret.get("rows", []) if isinstance(ret, dict) else []
+        if "flxz" in extra_filters:
+            rows = [row for row in rows if row.get("flxz") == extra_filters["flxz"]]
+        mapped_rows = [
+            {
+                "id": row.get("bbbs"),
+                "title": row.get("title"),
+                "publish": row.get("gbrq"),
+                "effect": row.get("sxrq"),
+                "level": row.get("flxz"),
+                "raw": row,
+            }
+            for row in rows
+        ]
+        mapped = {
+            "result": {
+                "data": mapped_rows,
+                "total": ret.get("total", 0),
+            }
+        }
+        self.cache.set(cache_key, CacheType.WebPage, mapped, "json")
+        return mapped
 
     def get_download_url(self, bbbs: str, file_format: str = "docx"):
         """
